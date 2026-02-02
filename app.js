@@ -2,6 +2,14 @@ const { useMemo, useState, useEffect } = React;
 
 const CURRENT_USER = "佐藤 健太";
 
+const resolveAsset = (path) => {
+  try {
+    return new URL(path, window.location.href).toString();
+  } catch {
+    return path;
+  }
+};
+
 const initialObjects = [
   {
     id: "obj-1",
@@ -553,7 +561,10 @@ function App() {
             title="型枠作成リスト"
             breadcrumbs={["オブジェクト一覧", "分割データ一覧"]}
             actions={
-              <button className="button primary" onClick={addSplit}>分割データの追加</button>
+              <>
+                <button className="button outline" onClick={() => setPage("objects")}>一覧へ戻る</button>
+                <button className="button primary" onClick={addSplit}>分割データの追加</button>
+              </>
             }
           />
         )}
@@ -562,7 +573,10 @@ function App() {
             title="型枠作成リスト"
             breadcrumbs={["オブジェクト一覧", "分割データ一覧", "パーツ作成リスト"]}
             actions={
-              <button className="button primary" onClick={() => addToast("リスト作成完了を記録しました")}>リスト作成完了</button>
+              <>
+                <button className="button outline" onClick={() => setPage("splits")}>分割データ一覧へ戻る</button>
+                <button className="button primary" onClick={() => addToast("リスト作成完了を記録しました")}>リスト作成完了</button>
+              </>
             }
           />
         )}
@@ -904,9 +918,10 @@ function PageHeader({ title, subtitle, breadcrumbs, actions }) {
 }
 
 function Viewport({ compact, image }) {
+  const resolvedImage = image ? resolveAsset(image) : "";
   return (
     <div className={`viewport ${compact ? "compact" : ""}`}>
-      {image && <img className="viewport-image" src={image} alt="" />}
+      {resolvedImage && <img className="viewport-image" src={resolvedImage} alt="" loading="lazy" />}
       <div className="viewport-grid"></div>
       <div className="viewport-box"></div>
       <div className="viewport-axis">

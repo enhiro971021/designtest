@@ -385,6 +385,7 @@ body::after {
   object-fit: cover;
   opacity: 0.75;
   filter: saturate(0.9) contrast(1.05);
+  z-index: 0;
 }
 
 .viewport-grid {
@@ -395,6 +396,7 @@ body::after {
     linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
   background-size: 20px 20px;
   opacity: 0.55;
+  z-index: 1;
 }
 
 .viewport-box {
@@ -404,6 +406,7 @@ body::after {
   border: 1px solid rgba(103, 232, 249, 0.4);
   box-shadow: 0 0 0 1px rgba(103, 232, 249, 0.15);
   background: rgba(15, 118, 110, 0.12);
+  z-index: 1;
 }
 
 .viewport-axis {
@@ -416,6 +419,7 @@ body::after {
   color: rgba(255, 255, 255, 0.7);
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  z-index: 2;
 }
 
 .viewport-axis span {
@@ -435,6 +439,7 @@ body::after {
   gap: 4px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
+  z-index: 2;
 }
 
 .hud-row {
