@@ -339,6 +339,20 @@ body::after {
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
+.card.clickable {
+  cursor: pointer;
+}
+
+.card.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 36px rgba(15, 27, 40, 0.12);
+}
+
+.card.clickable:focus-visible {
+  outline: 2px solid rgba(15, 118, 110, 0.4);
+  outline-offset: 2px;
+}
+
 .card:hover {
   transform: translateY(-2px);
   box-shadow: 0 20px 36px rgba(15, 27, 40, 0.12);
@@ -683,10 +697,31 @@ body::after {
 }
 
 .split-card__coords {
-  font-size: 17px;
-  font-weight: 600;
+  display: grid;
+  gap: 8px;
+}
+
+.coords-label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.coords-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.coord-pill {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f3eee8;
+  border: 1px solid #e2d9ce;
   color: var(--text);
-  letter-spacing: 0.01em;
+  font-weight: 600;
 }
 
 .split-card__desc {
@@ -718,6 +753,30 @@ body::after {
   display: grid;
   gap: 10px;
   justify-items: center;
+}
+
+.action-button {
+  width: 56px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--line-strong);
+  background: #f4eee7;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.action-button.primary {
+  background: linear-gradient(135deg, var(--accent), #1bb39a);
+  color: #fff;
+  border-color: transparent;
+}
+
+.action-button.secondary {
+  background: #f0ebe5;
+  color: var(--accent-strong);
 }
 
 .icon-button.action {

@@ -51,6 +51,7 @@ const initialSplits = [
     preview: "/previews/split-1.png",
     archived: false,
     status: "draft",
+    generatedAt: "",
     coords: { x1: 12.5, x2: 45.0, y1: 8.0, y2: 31.2, z1: 0.0, z2: 22.0 },
     description: "北面外壁セクション",
     confirmedAt: "",
@@ -67,6 +68,7 @@ const initialSplits = [
     preview: "/previews/split-2.png",
     archived: false,
     status: "confirmed",
+    generatedAt: "2026/02/02 11:20",
     coords: { x1: 45.0, x2: 92.4, y1: 8.0, y2: 31.2, z1: 0.0, z2: 22.0 },
     description: "南面外壁セクション",
     confirmedAt: "2026/02/02 13:40",
@@ -85,6 +87,7 @@ const initialSplits = [
     preview: "/previews/split-3.png",
     archived: false,
     status: "conflict",
+    generatedAt: "2026/02/02 15:50",
     coords: { x1: 40.5, x2: 88.2, y1: 8.0, y2: 31.2, z1: 0.0, z2: 22.0 },
     description: "北面外壁セクション（重なり）",
     confirmedAt: "",
@@ -101,6 +104,7 @@ const initialSplits = [
     preview: "/previews/split-1.png",
     archived: false,
     status: "confirmed",
+    generatedAt: "2026/02/02 13:40",
     coords: { x1: 10.0, x2: 52.8, y1: 6.0, y2: 28.4, z1: 0.0, z2: 20.5 },
     description: "低層部コア筒体",
     confirmedAt: "2026/02/02 14:15",
@@ -304,6 +308,19 @@ function App() {
     });
   };
 
+  const formatCoords = (coords) => {
+    return `x:${coords.x1}-${coords.x2}, y:${coords.y1}-${coords.y2}, z:${coords.z1}-${coords.z2}`;
+  };
+
+  const copyCoords = async (split) => {
+    try {
+      await navigator.clipboard.writeText(formatCoords(split.coords));
+      addToast("座標をコピーしました");
+    } catch (_) {
+      addToast("座標のコピーに失敗しました");
+    }
+  };
+
   const addPartLog = (partId, message) => {
     setParts((prev) =>
       prev.map((part) =>
@@ -325,6 +342,16 @@ function App() {
     });
     addSplitLog(split.id, `${CURRENT_USER} 分割データを確定`);
     addToast("分割データを確定しました");
+  };
+
+  const generateSplit = (split) => {
+    updateSplit(split.id, (next) => {
+      next.generatedAt = formatNow();
+      next.updatedAt = formatNow();
+      return next;
+    });
+    addSplitLog(split.id, `${CURRENT_USER} 分割データを生成`);
+    addToast("分割データを生成しました");
   };
 
   const revertSplit = (split) => {
@@ -462,6 +489,7 @@ function App() {
       preview: "/previews/split-1.png",
       archived: false,
       status: "draft",
+      generatedAt: "",
       coords: { x1: 0.0, x2: 12.5, y1: 0.0, y2: 8.0, z1: 0.0, z2: 3.2 },
       description: "北西コーナー基礎周辺",
       confirmedAt: "",
@@ -595,13 +623,33 @@ function App() {
                 const partsForObj = parts.filter((part) => splitsById[part.splitId]?.objectId === obj.id);
                 const doneCount = partsForObj.filter((part) => part.done).length;
                 return (
-                  <article key={obj.id} className="card">
+                  <article
+                    key={obj.id}
+                    className="card clickable"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => openSplitsPage(obj.id)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        openSplitsPage(obj.id);
+                      }
+                    }}
+                  >
                     <div className="card-row">
                       <Viewport image={obj.preview} />
                       <div className="info-block">
                         <div className="info-title">
                           <span className="object-name">{obj.projectName} / {obj.name}</span>
-                          <button className="icon-button" onClick={() => addToast("編集モードは準備中です")}>✎</button>
+                          <button
+                            className="icon-button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              addToast("編集モードは準備中です");
+                            }}
+                          >
+                            ✎
+                          </button>
                         </div>
                         <div className="info-meta">プロジェクト名：{obj.projectName}</div>
                         <div className="info-meta">オブジェクト名：{obj.name}</div>
@@ -613,7 +661,10 @@ function App() {
                           ))}
                         </div>
                       </div>
-                      <div className="action-row">
+                      <div
+                        className="action-row"
+                        onClick={(event) => event.stopPropagation()}
+                      >
                         <button className="button secondary" onClick={() => openSplitsPage(obj.id)}>詳細を開く</button>
                         <Menu
                           open={openMenuId === obj.id}
@@ -663,14 +714,43 @@ function App() {
                 const progressPercent = progress.total ? Math.round((progress.done / progress.total) * 100) : 0;
                 const needsParts = split.status === "confirmed" && progress.done < progress.total;
                 return (
-                  <article key={split.id} className="card split-card">
+                  <article
+                    key={split.id}
+                    className="card split-card clickable"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => openPartsPage(split)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        openPartsPage(split);
+                      }
+                    }}
+                  >
                     <div className="split-card__preview">
                       <Viewport className="large" image={split.preview} />
                     </div>
                     <div className="split-card__content">
                       <div className="split-card__date">最終編集日：{split.updatedAt}</div>
                       <div className="split-card__coords">
-                        (x1={split.coords.x1}, x2={split.coords.x2}, y1={split.coords.y1}, y2={split.coords.y2}, z1={split.coords.z1}, z2={split.coords.z2})
+                        <span className="coords-label">座標範囲（mm）</span>
+                        <div className="coords-tags">
+                          <span className="coord-pill">X {split.coords.x1}–{split.coords.x2}</span>
+                          <span className="coord-pill">Y {split.coords.y1}–{split.coords.y2}</span>
+                          <span className="coord-pill">Z {split.coords.z1}–{split.coords.z2}</span>
+                          <button
+                            className="mini-button ghost"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              copyCoords(split);
+                            }}
+                          >
+                            コピー
+                          </button>
+                          <button className="icon-button small disabled" title="モックでは編集できません" disabled>
+                            ✎
+                          </button>
+                        </div>
                       </div>
                       <div className="split-card__desc">{split.description}</div>
                       <div className="split-card__progress">
@@ -701,9 +781,10 @@ function App() {
                           {split.status === "draft" ? "ドラフト" : split.status === "confirmed" ? "確定済み" : "座標重なり"}
                         </div>
                         <div className="status-text">
-                          {split.status === "draft" && "分割データを確定してください"}
+                          {!split.generatedAt && "座標を確認して「分割データを生成」してください"}
+                          {split.generatedAt && split.status === "draft" && "生成済みです。「分割データを確定」してください"}
                           {split.status === "confirmed" && "パーツを登録してください"}
-                          {split.status === "conflict" && "他の分割データと座標が重なっています"}
+                          {split.status === "conflict" && "他の分割データと座標が重なっています（座標を調整してください）"}
                         </div>
                       </div>
                       <div className="log-box compact">
@@ -712,29 +793,29 @@ function App() {
                         ))}
                       </div>
                     </div>
-                    <div className="split-card__actions">
-                      <button
-                        className="icon-button action"
-                        title={needsParts ? "パーツ作成リストへ" : "詳細を開く"}
-                        onClick={() => openPartsPage(split)}
-                      >
-                        ⌁
-                      </button>
-                      {split.status === "confirmed" ? (
+                    <div className="split-card__actions" onClick={(event) => event.stopPropagation()}>
+                      {!split.generatedAt && (
                         <button
-                          className="icon-button action"
-                          title={needsParts ? "パーツ作成リストへ" : "編集に戻す"}
-                          onClick={() => (needsParts ? openPartsPage(split) : revertSplit(split))}
+                          className="action-button primary"
+                          onClick={() => generateSplit(split)}
                         >
-                          {needsParts ? "→" : "↺"}
+                          生成
                         </button>
-                      ) : (
+                      )}
+                      {split.generatedAt && split.status === "draft" && (
                         <button
-                          className="icon-button action"
-                          title="分割データを確定"
+                          className="action-button primary"
                           onClick={() => confirmSplit(split)}
                         >
-                          ✓
+                          確定
+                        </button>
+                      )}
+                      {split.status === "confirmed" && (
+                        <button
+                          className="action-button secondary"
+                          onClick={() => revertSplit(split)}
+                        >
+                          戻す
                         </button>
                       )}
                       <Menu
