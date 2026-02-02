@@ -5,16 +5,18 @@ const CURRENT_USER = "佐藤 健太";
 const resolveAsset = (path) => {
   if (!path) return "";
   if (path.startsWith("http")) return path;
-  if (window.location.protocol === "file:") {
-    return path.replace(/^\//, "");
+  const clean = String(path).replace(/^\/+/, "");
+  try {
+    return new URL(clean, document.baseURI).toString();
+  } catch {
+    return clean;
   }
-  return path.startsWith("/") ? path : `/${path}`;
 };
 
 const initialObjects = [
   {
     id: "obj-1",
-    preview: "/previews/object-1.png",
+    preview: "previews/object-1.png",
     archived: false,
     projectName: "渋谷スカイタワー計画",
     name: "外壁パネルA",
@@ -29,7 +31,7 @@ const initialObjects = [
   },
   {
     id: "obj-2",
-    preview: "/previews/object-2.png",
+    preview: "previews/object-2.png",
     archived: false,
     projectName: "大阪ウォーターフロント計画",
     name: "コア筒体B",
@@ -48,7 +50,7 @@ const initialSplits = [
   {
     id: "split-1",
     objectId: "obj-1",
-    preview: "/previews/split-1.png",
+    preview: "previews/split-1.png",
     archived: false,
     status: "draft",
     generatedAt: "",
@@ -65,7 +67,7 @@ const initialSplits = [
   {
     id: "split-2",
     objectId: "obj-1",
-    preview: "/previews/split-2.png",
+    preview: "previews/split-2.png",
     archived: false,
     status: "confirmed",
     generatedAt: "2026/02/02 11:20",
@@ -84,7 +86,7 @@ const initialSplits = [
   {
     id: "split-3",
     objectId: "obj-1",
-    preview: "/previews/split-3.png",
+    preview: "previews/split-3.png",
     archived: false,
     status: "conflict",
     generatedAt: "2026/02/02 15:50",
@@ -101,7 +103,7 @@ const initialSplits = [
   {
     id: "split-4",
     objectId: "obj-2",
-    preview: "/previews/split-1.png",
+    preview: "previews/split-1.png",
     archived: false,
     status: "confirmed",
     generatedAt: "2026/02/02 13:40",
@@ -121,7 +123,7 @@ const initialParts = [
   {
     id: "part-1",
     splitId: "split-2",
-    preview: "/previews/part-1.png",
+    preview: "previews/part-1.png",
     name: "北西コーナー基礎",
     description: "連結部の補強パネル",
     location: "北西コーナー基礎",
@@ -136,7 +138,7 @@ const initialParts = [
   {
     id: "part-2",
     splitId: "split-2",
-    preview: "/previews/part-2.png",
+    preview: "previews/part-2.png",
     name: "開口部補強",
     description: "外壁開口部の補強パネル",
     location: "南面開口部",
@@ -152,7 +154,7 @@ const initialParts = [
   {
     id: "part-3",
     splitId: "split-4",
-    preview: "/previews/part-3.png",
+    preview: "previews/part-3.png",
     name: "コア南面パネル",
     description: "中層部の補強パネル",
     location: "コア南面",
@@ -190,21 +192,21 @@ const initialVersions = [
 const partsLibrary = [
   {
     id: "lib-1",
-    preview: "/previews/part-1.png",
+    preview: "previews/part-1.png",
     name: "基礎補強パネル",
     description: "角部の補強用パネル",
     location: "北東コーナー",
   },
   {
     id: "lib-2",
-    preview: "/previews/part-2.png",
+    preview: "previews/part-2.png",
     name: "開口部フレーム",
     description: "開口部周りの固定フレーム",
     location: "南面開口部",
   },
   {
     id: "lib-3",
-    preview: "/previews/part-3.png",
+    preview: "previews/part-3.png",
     name: "外壁ジョイント",
     description: "外壁パネル連結部",
     location: "外周壁",
@@ -386,7 +388,7 @@ function App() {
     const newPart = {
       id: `part-${Date.now()}`,
       splitId,
-      preview: payload.preview || "/previews/part-1.png",
+      preview: payload.preview || "previews/part-1.png",
       name: payload.name,
       description: payload.description,
       location: payload.location,
@@ -468,7 +470,7 @@ function App() {
   const addObject = (payload) => {
     const nextObject = {
       id: `obj-${Date.now()}`,
-      preview: "/previews/object-1.png",
+      preview: "previews/object-1.png",
       archived: false,
       projectName: payload.projectName || "新規プロジェクト",
       name: payload.name,
@@ -486,7 +488,7 @@ function App() {
     const nextSplit = {
       id: `split-${Date.now()}`,
       objectId: selectedObject.id,
-      preview: "/previews/split-1.png",
+      preview: "previews/split-1.png",
       archived: false,
       status: "draft",
       generatedAt: "",
