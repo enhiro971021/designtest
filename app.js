@@ -3,6 +3,23 @@ const STORAGE_KEY = "3dpkentiku-mock";
 const placeholderSvg =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop stop-color='%23111927'/%3E%3Cstop offset='1' stop-color='%230c1220'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='320' height='320' fill='url(%23g)'/%3E%3Cpath d='M0 40h320M0 80h320M0 120h320M0 160h320M0 200h320M0 240h320M0 280h320' stroke='%231c2435' stroke-width='1'/%3E%3Cpath d='M40 0v320M80 0v320M120 0v320M160 0v320M200 0v320M240 0v320M280 0v320' stroke='%231c2435' stroke-width='1'/%3E%3Crect x='70' y='90' width='180' height='140' rx='10' fill='rgba(69,99,163,0.22)' stroke='%234b6fd1' stroke-width='2'/%3E%3C/svg%3E";
 
+function getBasePath() {
+  const path = location.pathname;
+  if (path.includes("/formwork/")) {
+    return path.split("/formwork/")[0] || "";
+  }
+  if (path.endsWith("/index.html")) {
+    return path.replace("/index.html", "");
+  }
+  return "";
+}
+
+const basePath = getBasePath();
+
+function assetPath(relativePath) {
+  return `${basePath}/${relativePath}`.replace(/\/+/g, "/");
+}
+
 const seedData = {
   project: { id: "project-1", name: "3DPKENTIKU" },
   objects: [
@@ -10,7 +27,7 @@ const seedData = {
       id: "Obj-001",
       name: "渋谷スカイタワー計画",
       description: "外壁パネルA",
-      preview: "previews/object-1.png",
+      preview: assetPath("previews/object-1.png"),
       createdAt: "2026/02/01 10:12",
       updatedAt: "2026/02/03 09:10",
       logs: [
@@ -23,7 +40,7 @@ const seedData = {
       id: "Obj-002",
       name: "大阪ウォーターフロント計画",
       description: "コア筒体B",
-      preview: "previews/object-2.png",
+      preview: assetPath("previews/object-2.png"),
       createdAt: "2026/02/01 11:04",
       updatedAt: "2026/02/03 08:42",
       logs: [
@@ -40,7 +57,7 @@ const seedData = {
       status: "draft",
       coords: "x:12.5–45.0, y:8.0–31.2, z:0.0–22.0",
       description: "北面外壁セクション",
-      preview: "previews/split-1.png",
+      preview: assetPath("previews/split-1.png"),
       confirmedAt: "",
       updatedAt: "2026/02/03 09:12",
       logs: [
@@ -54,7 +71,7 @@ const seedData = {
       status: "confirmed",
       coords: "x:45.0–92.4, y:8.0–31.2, z:0.0–22.0",
       description: "南面外壁セクション",
-      preview: "previews/split-2.png",
+      preview: assetPath("previews/split-2.png"),
       confirmedAt: "2026/02/02 13:40",
       updatedAt: "2026/02/03 09:02",
       logs: [
@@ -70,7 +87,7 @@ const seedData = {
       status: "conflict",
       coords: "x:40.5–88.2, y:8.0–31.2, z:0.0–22.0",
       description: "北面外壁セクション（重なり）",
-      preview: "previews/split-3.png",
+      preview: assetPath("previews/split-3.png"),
       confirmedAt: "",
       updatedAt: "2026/02/03 08:55",
       logs: [
@@ -84,7 +101,7 @@ const seedData = {
       status: "confirmed",
       coords: "x:10.0–52.8, y:6.0–28.4, z:0.0–20.5",
       description: "低層部コア筒体",
-      preview: "previews/split-1.png",
+      preview: assetPath("previews/split-1.png"),
       confirmedAt: "2026/02/02 14:15",
       updatedAt: "2026/02/03 09:01",
       logs: [
@@ -101,7 +118,7 @@ const seedData = {
       description: "連結部の補強パネル",
       location: "北西コーナー基礎",
       status: "inProgress",
-      preview: "previews/part-1.png",
+      preview: assetPath("previews/part-1.png"),
       uploaded: false,
       logs: [
         "2026/02/02 13:55 山田 太郎 パーツを追加（作業場所：北西コーナー）",
@@ -117,7 +134,7 @@ const seedData = {
       description: "外壁開口部の補強パネル",
       location: "南面開口部",
       status: "done",
-      preview: "previews/part-2.png",
+      preview: assetPath("previews/part-2.png"),
       uploaded: true,
       logs: [
         "2026/02/02 14:12 山田 太郎 パーツを作成完了に変更",
@@ -134,7 +151,7 @@ const seedData = {
       description: "中層部の補強パネル",
       location: "コア南面",
       status: "inProgress",
-      preview: "previews/part-3.png",
+      preview: assetPath("previews/part-3.png"),
       uploaded: false,
       logs: [
         "2026/02/02 15:10 佐藤 健太 パーツを追加（作業場所：コア南面）",
@@ -341,7 +358,7 @@ function renderObjects() {
       id,
       name: `新規オブジェクト ${nextIndex}`,
       description: "追加されたオブジェクト",
-      preview: "previews/object-1.png",
+      preview: assetPath("previews/object-1.png"),
       createdAt: formatNow(),
       updatedAt: formatNow(),
       logs: [`${formatNow()} 佐藤 健太 オブジェクトを追加`],
@@ -509,7 +526,7 @@ function renderSplits(objectId) {
       status: "draft",
       coords: "x:12.5–45.0, y:8.0–31.2, z:0.0–22.0",
       description: "追加された分割データ",
-      preview: "previews/split-1.png",
+      preview: assetPath("previews/split-1.png"),
       confirmedAt: "",
       updatedAt: formatNow(),
       logs: [`${formatNow()} 佐藤 健太 分割データを生成`],
@@ -996,7 +1013,7 @@ function openAddPartModal(splitId) {
       description: desc,
       location,
       status: "inProgress",
-      preview: "previews/part-1.png",
+      preview: assetPath("previews/part-1.png"),
       uploaded: false,
       logs: [`${formatNow()} 山田 太郎 パーツを追加（作業場所：${location}）`],
       fileHistory: [{ date: formatNow().split(" ")[0], user: "山田 太郎", file: "new-part.step" }],
