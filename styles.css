@@ -41,8 +41,8 @@ body {
 }
 
 .sidebar {
-  background: #f6f7fb;
-  border-right: 1px solid var(--line);
+  background: linear-gradient(180deg, #0f172a 0%, #0b1120 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
   padding: 28px 20px;
   display: flex;
   flex-direction: column;
@@ -67,6 +67,7 @@ body {
 .logo-text {
   font-weight: 700;
   letter-spacing: 0.04em;
+  color: #e2e8f0;
 }
 
 .sidebar__nav {
@@ -85,14 +86,14 @@ body {
 .nav-item {
   padding: 10px 14px;
   border-radius: 12px;
-  color: var(--muted);
+  color: rgba(226, 232, 240, 0.7);
   font-size: 14px;
   position: relative;
 }
 
 .nav-item.active {
-  color: var(--accent);
-  background: #eef3ff;
+  color: #f8fafc;
+  background: rgba(59, 130, 246, 0.18);
   font-weight: 600;
 }
 
@@ -104,7 +105,7 @@ body {
   bottom: 10px;
   width: 4px;
   border-radius: 999px;
-  background: var(--accent);
+  background: #60a5fa;
 }
 
 .nav-item.disabled {
@@ -114,7 +115,7 @@ body {
 
 .nav-divider {
   height: 1px;
-  background: var(--line);
+  background: rgba(255, 255, 255, 0.08);
   margin: 6px 0;
 }
 
@@ -385,6 +386,62 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menu-wrap {
+  position: relative;
+}
+
+.menu-button {
+  border: 1px solid var(--line-strong);
+  background: #f5f7fb;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  top: 46px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow-soft);
+  min-width: 180px;
+  padding: 8px;
+  display: none;
+  z-index: 10;
+}
+
+.menu.open {
+  display: block;
+}
+
+.menu-item {
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.menu-item:hover {
+  background: #f2f5fb;
 }
 
 .badge {

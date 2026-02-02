@@ -38,7 +38,7 @@ const seedData = {
       id: "Split-001",
       objectId: "Obj-001",
       status: "draft",
-      coords: "x:0–120, y:0–80, z:0–60",
+      coords: "x:12.5–45.0, y:8.0–31.2, z:0.0–22.0",
       description: "北面外壁セクション",
       preview: "previews/split-1.png",
       confirmedAt: "",
@@ -52,7 +52,7 @@ const seedData = {
       id: "Split-002",
       objectId: "Obj-001",
       status: "confirmed",
-      coords: "x:120–240, y:0–80, z:0–60",
+      coords: "x:45.0–92.4, y:8.0–31.2, z:0.0–22.0",
       description: "南面外壁セクション",
       preview: "previews/split-2.png",
       confirmedAt: "2026/02/02 13:40",
@@ -68,7 +68,7 @@ const seedData = {
       id: "Split-003",
       objectId: "Obj-001",
       status: "conflict",
-      coords: "x:110–230, y:0–80, z:0–60",
+      coords: "x:40.5–88.2, y:8.0–31.2, z:0.0–22.0",
       description: "北面外壁セクション（重なり）",
       preview: "previews/split-3.png",
       confirmedAt: "",
@@ -82,7 +82,7 @@ const seedData = {
       id: "Split-101",
       objectId: "Obj-002",
       status: "confirmed",
-      coords: "x:0–140, y:0–90, z:0–65",
+      coords: "x:10.0–52.8, y:6.0–28.4, z:0.0–20.5",
       description: "低層部コア筒体",
       preview: "previews/split-1.png",
       confirmedAt: "2026/02/02 14:15",
@@ -161,6 +161,7 @@ const contentEl = document.getElementById("page-content");
 const modalRoot = document.getElementById("modal-root");
 const modalBackdrop = document.getElementById("modal-backdrop");
 const toastContainer = document.getElementById("toast-container");
+let menuGlobalBound = false;
 
 function loadState() {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -299,18 +300,24 @@ function renderObjects() {
                 <span data-id="${obj.id}" class="object-name">${obj.name}</span>
                 <button class="icon-button edit-object" data-id="${obj.id}">✎</button>
               </div>
-              <div class="info-meta">${obj.description}</div>
+              <div class="info-meta">プロジェクト名：${obj.name}</div>
+              <div class="info-meta">オブジェクト名：${obj.description}</div>
               <div class="info-meta">分割データ：${splits.length}件</div>
               <div class="info-meta">パーツ：${doneParts}/${totalParts}</div>
               <div class="log-box">${obj.logs
                 .map((log) => `<div class="log-line">${log}</div>`)
                 .join("")}</div>
             </div>
-            <div class="button-stack">
+            <div class="action-row">
               <button class="button secondary" data-action="open-splits" data-id="${obj.id}">詳細を開く</button>
-              <button class="button outline" data-action="replace-object" data-id="${obj.id}">データ置換</button>
-              <button class="button outline" data-action="download-object" data-id="${obj.id}">ダウンロード</button>
-              <button class="button outline" data-action="archive-object" data-id="${obj.id}">アーカイブ</button>
+              <div class="menu-wrap">
+                <button class="menu-button" data-menu="object-${obj.id}">⋯</button>
+                <div class="menu" id="menu-object-${obj.id}">
+                  <button class="menu-item" data-action="replace-object" data-id="${obj.id}">データ置換</button>
+                  <button class="menu-item" data-action="download-object" data-id="${obj.id}">ダウンロード</button>
+                  <button class="menu-item" data-action="archive-object" data-id="${obj.id}">アーカイブ</button>
+                </div>
+              </div>
             </div>
           </div>
         </article>
@@ -351,6 +358,7 @@ function renderObjects() {
   });
 
   bindObjectActions();
+  bindMenus();
 }
 
 function bindObjectActions() {
@@ -462,14 +470,19 @@ function renderSplits(objectId) {
                 .map((log) => `<div class="log-line">${log}</div>`)
                 .join("")}</div>
             </div>
-            <div class="button-stack">
+            <div class="action-row">
               <button class="button secondary" data-action="open-parts" data-id="${split.id}">詳細を開く</button>
               <button class="button outline" data-action="toggle-split" data-id="${split.id}" ${
                 isConflict ? "disabled" : ""
               }>${actionLabel}</button>
-              <button class="button outline" data-action="replace-split" data-id="${split.id}">データ置換</button>
-              <button class="button outline" data-action="download-split" data-id="${split.id}">ダウンロード</button>
-              <button class="button outline" data-action="archive-split" data-id="${split.id}">アーカイブ</button>
+              <div class="menu-wrap">
+                <button class="menu-button" data-menu="split-${split.id}">⋯</button>
+                <div class="menu" id="menu-split-${split.id}">
+                  <button class="menu-item" data-action="replace-split" data-id="${split.id}">データ置換</button>
+                  <button class="menu-item" data-action="download-split" data-id="${split.id}">ダウンロード</button>
+                  <button class="menu-item" data-action="archive-split" data-id="${split.id}">アーカイブ</button>
+                </div>
+              </div>
             </div>
           </div>
         </article>
@@ -494,7 +507,7 @@ function renderSplits(objectId) {
       id,
       objectId,
       status: "draft",
-      coords: "x:0–120, y:0–80, z:0–60",
+      coords: "x:12.5–45.0, y:8.0–31.2, z:0.0–22.0",
       description: "追加された分割データ",
       preview: "previews/split-1.png",
       confirmedAt: "",
@@ -513,6 +526,7 @@ function renderSplits(objectId) {
   });
 
   bindSplitActions(objectId);
+  bindMenus();
 }
 
 function bindSplitActions(objectId) {
@@ -612,16 +626,21 @@ function renderParts(splitId) {
                 .map((log) => `<div class="log-line">${log}</div>`)
                 .join("")}</div>
             </div>
-            <div class="button-stack">
+            <div class="action-row">
               <button class="button secondary" data-action="toggle-part" data-id="${part.id}">${
                 part.status === "done" ? "作成中にもどす" : "パーツ作成完了"
               }</button>
-              <button class="button outline" data-action="detail-part" data-id="${part.id}">詳細を開く</button>
-              <button class="button outline" data-action="upload-part" data-id="${part.id}">アップロード</button>
-              <button class="button outline" data-action="download-part" data-id="${part.id}">ダウンロード</button>
-              <button class="button outline" data-action="code-part" data-id="${part.id}">コードダウンロード</button>
-              <button class="button outline" data-action="duplicate-part" data-id="${part.id}">複製</button>
-              <button class="button outline" data-action="delete-part" data-id="${part.id}">削除</button>
+              <div class="menu-wrap">
+                <button class="menu-button" data-menu="part-${part.id}">⋯</button>
+                <div class="menu" id="menu-part-${part.id}">
+                  <button class="menu-item" data-action="detail-part" data-id="${part.id}">詳細を開く</button>
+                  <button class="menu-item" data-action="upload-part" data-id="${part.id}">アップロード</button>
+                  <button class="menu-item" data-action="download-part" data-id="${part.id}">ダウンロード</button>
+                  <button class="menu-item" data-action="code-part" data-id="${part.id}">コードダウンロード</button>
+                  <button class="menu-item" data-action="duplicate-part" data-id="${part.id}">複製</button>
+                  <button class="menu-item" data-action="delete-part" data-id="${part.id}">削除</button>
+                </div>
+              </div>
             </div>
           </div>
         </article>
@@ -671,6 +690,27 @@ function renderParts(splitId) {
   });
 
   bindPartActions(splitId);
+  bindMenus();
+}
+
+function bindMenus() {
+  document.querySelectorAll(".menu-button").forEach((btn) => {
+    btn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const target = document.getElementById(`menu-${btn.dataset.menu}`);
+      document.querySelectorAll(".menu").forEach((menu) => {
+        if (menu !== target) menu.classList.remove("open");
+      });
+      target.classList.toggle("open");
+    });
+  });
+
+  if (!menuGlobalBound) {
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".menu").forEach((menu) => menu.classList.remove("open"));
+    });
+    menuGlobalBound = true;
+  }
 }
 
 function bindPartActions(splitId) {
