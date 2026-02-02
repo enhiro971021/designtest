@@ -5,6 +5,9 @@ const CURRENT_USER = "佐藤 健太";
 const resolveAsset = (path) => {
   if (!path) return "";
   if (path.startsWith("http")) return path;
+  if (window.location.protocol === "file:") {
+    return path.replace(/^\//, "");
+  }
   return path.startsWith("/") ? path : `/${path}`;
 };
 
