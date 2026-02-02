@@ -184,16 +184,29 @@ function loadState() {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved) {
     try {
-      return JSON.parse(saved);
+      const parsed = JSON.parse(saved);
+      return normalizePreviews(parsed);
     } catch (_) {
-      return structuredClone(seedData);
+      return normalizePreviews(structuredClone(seedData));
     }
   }
-  return structuredClone(seedData);
+  return normalizePreviews(structuredClone(seedData));
 }
 
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function normalizePreviews(data) {
+  const fix = (entry) => {
+    if (!entry.preview) return;
+    const file = entry.preview.split("/").pop();
+    entry.preview = assetPath(`previews/${file}`);
+  };
+  data.objects.forEach(fix);
+  data.splits.forEach(fix);
+  data.parts.forEach(fix);
+  return data;
 }
 
 function formatNow() {
