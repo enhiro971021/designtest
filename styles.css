@@ -260,7 +260,7 @@ body {
 
 .card-row {
   display: grid;
-  grid-template-columns: 170px 1fr 140px;
+  grid-template-columns: 170px 1fr 160px;
   gap: 18px;
   align-items: start;
 }
@@ -422,7 +422,7 @@ body {
 
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(560px, 1fr));
   gap: 18px;
 }
 
@@ -643,6 +643,10 @@ body {
 
   .card-row {
     grid-template-columns: 150px 1fr;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
   }
 
   .button-stack {
