@@ -10,7 +10,7 @@ const seedData = {
       id: "Obj-001",
       name: "渋谷スカイタワー計画",
       description: "外壁パネルA",
-      preview: "/previews/object-1.png",
+      preview: "previews/object-1.png",
       createdAt: "2026/02/01 10:12",
       updatedAt: "2026/02/03 09:10",
       logs: [
@@ -23,7 +23,7 @@ const seedData = {
       id: "Obj-002",
       name: "大阪ウォーターフロント計画",
       description: "コア筒体B",
-      preview: "/previews/object-2.png",
+      preview: "previews/object-2.png",
       createdAt: "2026/02/01 11:04",
       updatedAt: "2026/02/03 08:42",
       logs: [
@@ -40,7 +40,7 @@ const seedData = {
       status: "draft",
       coords: "x:0–120, y:0–80, z:0–60",
       description: "北面外壁セクション",
-      preview: "/previews/split-1.png",
+      preview: "previews/split-1.png",
       confirmedAt: "",
       updatedAt: "2026/02/03 09:12",
       logs: [
@@ -54,7 +54,7 @@ const seedData = {
       status: "confirmed",
       coords: "x:120–240, y:0–80, z:0–60",
       description: "南面外壁セクション",
-      preview: "/previews/split-2.png",
+      preview: "previews/split-2.png",
       confirmedAt: "2026/02/02 13:40",
       updatedAt: "2026/02/03 09:02",
       logs: [
@@ -70,7 +70,7 @@ const seedData = {
       status: "conflict",
       coords: "x:110–230, y:0–80, z:0–60",
       description: "北面外壁セクション（重なり）",
-      preview: "/previews/split-3.png",
+      preview: "previews/split-3.png",
       confirmedAt: "",
       updatedAt: "2026/02/03 08:55",
       logs: [
@@ -84,7 +84,7 @@ const seedData = {
       status: "confirmed",
       coords: "x:0–140, y:0–90, z:0–65",
       description: "低層部コア筒体",
-      preview: "/previews/split-1.png",
+      preview: "previews/split-1.png",
       confirmedAt: "2026/02/02 14:15",
       updatedAt: "2026/02/03 09:01",
       logs: [
@@ -101,7 +101,7 @@ const seedData = {
       description: "連結部の補強パネル",
       location: "北西コーナー基礎",
       status: "inProgress",
-      preview: "/previews/part-1.png",
+      preview: "previews/part-1.png",
       uploaded: false,
       logs: [
         "2026/02/02 13:55 山田 太郎 パーツを追加（作業場所：北西コーナー）",
@@ -117,7 +117,7 @@ const seedData = {
       description: "外壁開口部の補強パネル",
       location: "南面開口部",
       status: "done",
-      preview: "/previews/part-2.png",
+      preview: "previews/part-2.png",
       uploaded: true,
       logs: [
         "2026/02/02 14:12 山田 太郎 パーツを作成完了に変更",
@@ -134,7 +134,7 @@ const seedData = {
       description: "中層部の補強パネル",
       location: "コア南面",
       status: "inProgress",
-      preview: "/previews/part-3.png",
+      preview: "previews/part-3.png",
       uploaded: false,
       logs: [
         "2026/02/02 15:10 佐藤 健太 パーツを追加（作業場所：コア南面）",
@@ -334,7 +334,7 @@ function renderObjects() {
       id,
       name: `新規オブジェクト ${nextIndex}`,
       description: "追加されたオブジェクト",
-      preview: "/previews/object-1.png",
+      preview: "previews/object-1.png",
       createdAt: formatNow(),
       updatedAt: formatNow(),
       logs: [`${formatNow()} 佐藤 健太 オブジェクトを追加`],
@@ -496,7 +496,7 @@ function renderSplits(objectId) {
       status: "draft",
       coords: "x:0–120, y:0–80, z:0–60",
       description: "追加された分割データ",
-      preview: "/previews/split-1.png",
+      preview: "previews/split-1.png",
       confirmedAt: "",
       updatedAt: formatNow(),
       logs: [`${formatNow()} 佐藤 健太 分割データを生成`],
@@ -956,7 +956,7 @@ function openAddPartModal(splitId) {
       description: desc,
       location,
       status: "inProgress",
-      preview: "/previews/part-1.png",
+      preview: "previews/part-1.png",
       uploaded: false,
       logs: [`${formatNow()} 山田 太郎 パーツを追加（作業場所：${location}）`],
       fileHistory: [{ date: formatNow().split(" ")[0], user: "山田 太郎", file: "new-part.step" }],
