@@ -5,6 +5,8 @@ const CURRENT_USER = "佐藤 健太";
 const initialObjects = [
   {
     id: "obj-1",
+    preview: "previews/object-1.png",
+    archived: false,
     projectName: "渋谷スカイタワー計画",
     name: "外壁パネルA",
     updatedAt: "2026/02/03 09:10",
@@ -18,6 +20,8 @@ const initialObjects = [
   },
   {
     id: "obj-2",
+    preview: "previews/object-2.png",
+    archived: false,
     projectName: "大阪ウォーターフロント計画",
     name: "コア筒体B",
     updatedAt: "2026/02/03 08:42",
@@ -35,6 +39,8 @@ const initialSplits = [
   {
     id: "split-1",
     objectId: "obj-1",
+    preview: "previews/split-1.png",
+    archived: false,
     status: "draft",
     coords: { x1: 12.5, x2: 45.0, y1: 8.0, y2: 31.2, z1: 0.0, z2: 22.0 },
     description: "北面外壁セクション",
@@ -49,6 +55,8 @@ const initialSplits = [
   {
     id: "split-2",
     objectId: "obj-1",
+    preview: "previews/split-2.png",
+    archived: false,
     status: "confirmed",
     coords: { x1: 45.0, x2: 92.4, y1: 8.0, y2: 31.2, z1: 0.0, z2: 22.0 },
     description: "南面外壁セクション",
@@ -65,6 +73,8 @@ const initialSplits = [
   {
     id: "split-3",
     objectId: "obj-1",
+    preview: "previews/split-3.png",
+    archived: false,
     status: "conflict",
     coords: { x1: 40.5, x2: 88.2, y1: 8.0, y2: 31.2, z1: 0.0, z2: 22.0 },
     description: "北面外壁セクション（重なり）",
@@ -79,6 +89,8 @@ const initialSplits = [
   {
     id: "split-4",
     objectId: "obj-2",
+    preview: "previews/split-1.png",
+    archived: false,
     status: "confirmed",
     coords: { x1: 10.0, x2: 52.8, y1: 6.0, y2: 28.4, z1: 0.0, z2: 20.5 },
     description: "低層部コア筒体",
@@ -96,44 +108,47 @@ const initialParts = [
   {
     id: "part-1",
     splitId: "split-2",
+    preview: "previews/part-1.png",
     name: "北西コーナー基礎",
     description: "連結部の補強パネル",
     location: "北西コーナー基礎",
     done: false,
     logs: ["2026/02/02 13:55 山田 太郎 パーツを追加（作業場所：北西コーナー）"],
     fileHistory: [
-      { date: "2026/02/02", user: "山田 太郎", file: "core-nw-v1.step" },
+      { date: "2026/02/02", user: "山田 太郎", file: "北西コーナー_v1.step" },
     ],
-    usageList: ["Split-002", "Split-008", "Split-010", "Split-014"],
+    usageList: ["分割-002", "分割-008", "分割-010", "分割-014"],
     locationList: ["北西コーナー", "基礎梁", "外周壁", "構造補強"],
   },
   {
     id: "part-2",
     splitId: "split-2",
+    preview: "previews/part-2.png",
     name: "開口部補強",
     description: "外壁開口部の補強パネル",
     location: "南面開口部",
     done: true,
     logs: ["2026/02/02 14:12 山田 太郎 パーツを完了に変更"],
     fileHistory: [
-      { date: "2026/02/02", user: "山田 太郎", file: "opening-reinforce-v2.step" },
-      { date: "2026/02/03", user: "山田 太郎", file: "opening-reinforce-v3.step" },
+      { date: "2026/02/02", user: "山田 太郎", file: "開口部補強_v2.step" },
+      { date: "2026/02/03", user: "山田 太郎", file: "開口部補強_v3.step" },
     ],
-    usageList: ["Split-002", "Split-009", "Split-012", "Split-019"],
+    usageList: ["分割-002", "分割-009", "分割-012", "分割-019"],
     locationList: ["南面開口部", "外壁パネル", "補強枠", "中層部"],
   },
   {
     id: "part-3",
     splitId: "split-4",
+    preview: "previews/part-3.png",
     name: "コア南面パネル",
     description: "中層部の補強パネル",
     location: "コア南面",
     done: false,
     logs: ["2026/02/02 15:10 佐藤 健太 パーツを追加（作業場所：コア南面）"],
     fileHistory: [
-      { date: "2026/02/02", user: "佐藤 健太", file: "core-south-v1.step" },
+      { date: "2026/02/02", user: "佐藤 健太", file: "コア南面_v1.step" },
     ],
-    usageList: ["Split-101", "Split-105", "Split-112", "Split-119"],
+    usageList: ["分割-101", "分割-105", "分割-112", "分割-119"],
     locationList: ["コア南面", "補強パネル", "中層部", "躯体接合"],
   },
 ];
@@ -143,7 +158,7 @@ const initialVersions = [
     id: "ver-1",
     name: "1.0.0",
     createdAt: "2026/02/02",
-    status: "適用中",
+    status: "リスト作成中",
     partsDone: 3,
     partsTotal: 12,
     applied: true,
@@ -152,7 +167,7 @@ const initialVersions = [
     id: "ver-0",
     name: "0.0.0",
     createdAt: "2026/02/01",
-    status: "履歴",
+    status: "作成完了",
     partsDone: 0,
     partsTotal: 12,
     applied: false,
@@ -162,18 +177,21 @@ const initialVersions = [
 const partsLibrary = [
   {
     id: "lib-1",
+    preview: "previews/part-1.png",
     name: "基礎補強パネル",
     description: "角部の補強用パネル",
     location: "北東コーナー",
   },
   {
     id: "lib-2",
+    preview: "previews/part-2.png",
     name: "開口部フレーム",
     description: "開口部周りの固定フレーム",
     location: "南面開口部",
   },
   {
     id: "lib-3",
+    preview: "previews/part-3.png",
     name: "外壁ジョイント",
     description: "外壁パネル連結部",
     location: "外周壁",
@@ -218,11 +236,13 @@ function App() {
     return () => document.removeEventListener("click", handleClick);
   }, []);
 
-  const selectedObject = objects.find((obj) => obj.id === selectedObjectId) || objects[0];
-  const selectedSplit = splits.find((split) => split.id === selectedSplitId) || splits[0];
+  const visibleObjects = objects.filter((obj) => !obj.archived);
+  const visibleSplits = splits.filter((split) => !split.archived);
+  const selectedObject = visibleObjects.find((obj) => obj.id === selectedObjectId) || visibleObjects[0];
+  const selectedSplit = visibleSplits.find((split) => split.id === selectedSplitId) || visibleSplits[0];
 
-  const objectSplits = splits.filter((split) => split.objectId === selectedObject?.id);
-  const splitsById = useMemo(() => Object.fromEntries(splits.map((s) => [s.id, s])), [splits]);
+  const objectSplits = visibleSplits.filter((split) => split.objectId === selectedObject?.id);
+  const splitsById = useMemo(() => Object.fromEntries(visibleSplits.map((s) => [s.id, s])), [visibleSplits]);
 
   const partsBySplitId = useMemo(() => {
     const map = {};
@@ -234,6 +254,10 @@ function App() {
   }, [parts]);
 
   const currentSplitParts = partsBySplitId[selectedSplit?.id] || [];
+  const activeVersion = versions.find((ver) => ver.applied) || versions[0];
+  const modalPart = modal.type === "partDetail"
+    ? parts.find((item) => item.id === modal.data)
+    : null;
 
   const addToast = (message) => {
     const id = `${Date.now()}-${Math.random()}`;
@@ -241,6 +265,20 @@ function App() {
     setTimeout(() => {
       setToasts((prev) => prev.filter((toast) => toast.id !== id));
     }, 2600);
+  };
+
+  const updateObject = (objectId, updater) => {
+    setObjects((prev) =>
+      prev.map((obj) => (obj.id === objectId ? updater({ ...obj }) : obj))
+    );
+  };
+
+  const addObjectLog = (objectId, message) => {
+    updateObject(objectId, (obj) => {
+      obj.logs = [`${formatNow()} ${message}`, ...obj.logs].slice(0, 6);
+      obj.updatedAt = formatNow();
+      return obj;
+    });
   };
 
   const updateSplit = (splitId, updater) => {
@@ -312,20 +350,22 @@ function App() {
     const newPart = {
       id: `part-${Date.now()}`,
       splitId,
+      preview: payload.preview || "previews/part-1.png",
       name: payload.name,
       description: payload.description,
       location: payload.location,
       done: false,
       logs: [`${formatNow()} ${CURRENT_USER} パーツを追加（作業場所：${payload.location}）`],
       fileHistory: [],
-      usageList: ["Split-002", "Split-009", "Split-012", "Split-019"],
+      usageList: ["分割-002", "分割-009", "分割-012", "分割-019"],
       locationList: [payload.location, "外周壁", "補強枠", "中層部"],
     };
     setParts((prev) => [...prev, newPart]);
     addSplitLog(splitId, `${CURRENT_USER} パーツを追加（作業場所：${payload.location}）`);
     updateSplit(splitId, (next) => {
       const partCount = (partsBySplitId[splitId] || []).length + 1;
-      next.totalParts = Math.max(next.totalParts || 0, partCount);
+      const baseTotal = Math.max(next.totalParts || 0, partCount);
+      next.totalParts = baseTotal + 1;
       return next;
     });
     addToast("パーツを追加しました");
@@ -335,7 +375,7 @@ function App() {
     const nextHistory = {
       date: formatDateOnly(new Date()),
       user: CURRENT_USER,
-      file: `${part.name.replace(/\s+/g, "")}-v${Math.floor(Math.random() * 3) + 2}.step`,
+      file: `${part.name}_v${Math.floor(Math.random() * 3) + 2}.step`,
     };
     setParts((prev) =>
       prev.map((item) =>
@@ -368,6 +408,63 @@ function App() {
     addToast("パーツを削除しました");
   };
 
+  const uploadPart = (part) => {
+    setParts((prev) =>
+      prev.map((item) =>
+        item.id === part.id ? { ...item, done: true } : item
+      )
+    );
+    addPartLog(part.id, `${CURRENT_USER} パーツをアップロード`);
+    addSplitLog(part.splitId, `${CURRENT_USER} パーツをアップロード（${part.name}）`);
+    addToast("パーツをアップロードしました");
+  };
+
+  const archiveObject = (objectId) => {
+    updateObject(objectId, (obj) => ({ ...obj, archived: true }));
+    addToast("オブジェクトをアーカイブしました");
+  };
+
+  const archiveSplit = (splitId) => {
+    updateSplit(splitId, (split) => ({ ...split, archived: true }));
+    addToast("分割データをアーカイブしました");
+  };
+
+  const addObject = (payload) => {
+    const nextObject = {
+      id: `obj-${Date.now()}`,
+      preview: "previews/object-1.png",
+      archived: false,
+      projectName: payload.projectName || "新規プロジェクト",
+      name: payload.name,
+      updatedAt: formatNow(),
+      createdAt: formatNow(),
+      logs: [`${formatNow()} ${CURRENT_USER} オブジェクトを追加`],
+    };
+    setObjects((prev) => [nextObject, ...prev]);
+    setSelectedObjectId(nextObject.id);
+    addToast("オブジェクトを追加しました");
+  };
+
+  const addSplit = () => {
+    if (!selectedObject) return;
+    const nextSplit = {
+      id: `split-${Date.now()}`,
+      objectId: selectedObject.id,
+      preview: "previews/split-1.png",
+      archived: false,
+      status: "draft",
+      coords: { x1: 0.0, x2: 12.5, y1: 0.0, y2: 8.0, z1: 0.0, z2: 3.2 },
+      description: "北西コーナー基礎周辺",
+      confirmedAt: "",
+      updatedAt: formatNow(),
+      totalParts: 0,
+      logs: [`${formatNow()} ${CURRENT_USER} 分割データを生成`],
+    };
+    setSplits((prev) => [nextSplit, ...prev]);
+    setSelectedSplitId(nextSplit.id);
+    addToast("分割データを追加しました");
+  };
+
   const openPartsPage = (split) => {
     setSelectedSplitId(split.id);
     setSelectedObjectId(split.objectId);
@@ -376,7 +473,7 @@ function App() {
 
   const openSplitsPage = (objectId) => {
     setSelectedObjectId(objectId);
-    const firstSplit = splits.find((split) => split.objectId === objectId) || splits[0];
+    const firstSplit = visibleSplits.find((split) => split.objectId === objectId) || visibleSplits[0];
     if (firstSplit) setSelectedSplitId(firstSplit.id);
     setPage("splits");
   };
@@ -447,7 +544,7 @@ function App() {
             title="型枠作成リスト"
             subtitle="オブジェクト一覧"
             actions={
-              <button className="button primary" onClick={() => addToast("オブジェクトを追加しました")}>オブジェクトの追加</button>
+              <button className="button primary" onClick={() => openModal("addObject")}>オブジェクトの追加</button>
             }
           />
         )}
@@ -456,7 +553,7 @@ function App() {
             title="型枠作成リスト"
             breadcrumbs={["オブジェクト一覧", "分割データ一覧"]}
             actions={
-              <button className="button primary" onClick={() => addToast("分割データを追加しました")}>分割データの追加</button>
+              <button className="button primary" onClick={addSplit}>分割データの追加</button>
             }
           />
         )}
@@ -478,17 +575,17 @@ function App() {
               <div className="chip">オブジェクト名↑</div>
             </div>
             <div className="card-stack">
-              {objects.map((obj) => {
-                const splitsForObj = splits.filter((split) => split.objectId === obj.id);
+              {visibleObjects.map((obj) => {
+                const splitsForObj = visibleSplits.filter((split) => split.objectId === obj.id);
                 const partsForObj = parts.filter((part) => splitsById[part.splitId]?.objectId === obj.id);
                 const doneCount = partsForObj.filter((part) => part.done).length;
                 return (
                   <article key={obj.id} className="card">
                     <div className="card-row">
-                      <Viewport />
+                      <Viewport image={obj.preview} />
                       <div className="info-block">
                         <div className="info-title">
-                          <span className="object-name">{obj.name}</span>
+                          <span className="object-name">{obj.projectName} / {obj.name}</span>
                           <button className="icon-button" onClick={() => addToast("編集モードは準備中です")}>✎</button>
                         </div>
                         <div className="info-meta">プロジェクト名：{obj.projectName}</div>
@@ -509,10 +606,23 @@ function App() {
                             event.stopPropagation();
                             setOpenMenuId(openMenuId === obj.id ? "" : obj.id);
                           }}
+                          onClose={() => setOpenMenuId("")}
                           items={[
-                            { label: "データ置換", onClick: () => addToast("データを置換しました") },
-                            { label: "ダウンロード", onClick: () => addToast("ダウンロードを開始しました") },
-                            { label: "アーカイブ", onClick: () => addToast("アーカイブしました") },
+                            {
+                              label: "データ置換",
+                              onClick: () => {
+                                addObjectLog(obj.id, `${CURRENT_USER} データ置換を実施`);
+                                addToast("データを置換しました");
+                              },
+                            },
+                            {
+                              label: "ダウンロード",
+                              onClick: () => {
+                                addObjectLog(obj.id, `${CURRENT_USER} オブジェクトをダウンロード`);
+                                addToast("ダウンロードを開始しました");
+                              },
+                            },
+                            { label: "アーカイブ", onClick: () => archiveObject(obj.id) },
                           ]}
                         />
                       </div>
@@ -539,7 +649,7 @@ function App() {
                 return (
                   <article key={split.id} className="card">
                     <div className="card-row">
-                      <Viewport compact />
+                      <Viewport compact image={split.preview} />
                       <div className="info-block">
                         <div className="meta-row">
                           <div>
@@ -551,8 +661,11 @@ function App() {
                           }</div>
                         </div>
                         <div className="info-title">{split.description}</div>
-                        <div className="coords">
-                          x:{split.coords.x1}–{split.coords.x2} / y:{split.coords.y1}–{split.coords.y2} / z:{split.coords.z1}–{split.coords.z2}
+                        <div className="coords-row">
+                          <div className="coords">
+                            (x1={split.coords.x1}, x2={split.coords.x2}, y1={split.coords.y1}, y2={split.coords.y2}, z1={split.coords.z1}, z2={split.coords.z2})
+                          </div>
+                          <button className="icon-button small disabled" title="モックでは編集できません" disabled>✎</button>
                         </div>
                         {split.status === "confirmed" ? (
                           <div className="progress-line">
@@ -592,7 +705,7 @@ function App() {
                       </div>
                       <div className="action-row">
                         {split.status === "confirmed" ? (
-                          <button className="button secondary" onClick={() => revertSplit(split)}>編集中にもどす</button>
+                          <button className="button secondary" onClick={() => revertSplit(split)}>編集に戻す</button>
                         ) : (
                           <button className="button secondary" onClick={() => confirmSplit(split)}>分割データを確定</button>
                         )}
@@ -602,11 +715,24 @@ function App() {
                             event.stopPropagation();
                             setOpenMenuId(openMenuId === split.id ? "" : split.id);
                           }}
+                          onClose={() => setOpenMenuId("")}
                           items={[
                             { label: "詳細を開く", onClick: () => openPartsPage(split) },
-                            { label: "データ置換", onClick: () => addToast("データを置換しました") },
-                            { label: "ダウンロード", onClick: () => addToast("ダウンロードを開始しました") },
-                            { label: "アーカイブ", onClick: () => addToast("アーカイブしました") },
+                            {
+                              label: "データ置換",
+                              onClick: () => {
+                                addSplitLog(split.id, `${CURRENT_USER} 分割データを置換`);
+                                addToast("データを置換しました");
+                              },
+                            },
+                            {
+                              label: "ダウンロード",
+                              onClick: () => {
+                                addSplitLog(split.id, `${CURRENT_USER} 分割データをダウンロード`);
+                                addToast("ダウンロードを開始しました");
+                              },
+                            },
+                            { label: "アーカイブ", onClick: () => archiveSplit(split.id) },
                           ]}
                         />
                       </div>
@@ -624,8 +750,8 @@ function App() {
               <div className="version-info">
                 <div className="badge">適用中</div>
                 <div className="version-meta">
-                  <div className="version-title">Version 1.0.0</div>
-                  <div>更新日：2026/02/02</div>
+                  <div className="version-title">バージョン {activeVersion?.name}</div>
+                  <div>更新日：{activeVersion?.createdAt}</div>
                 </div>
               </div>
               <div className="version-progress">
@@ -656,7 +782,7 @@ function App() {
               {currentSplitParts.map((part) => (
                 <article key={part.id} className="card">
                   <div className="card-row">
-                    <Viewport compact />
+                    <Viewport compact image={part.preview} />
                     <div className="info-block">
                       <div className="info-title">
                         {part.name}
@@ -674,17 +800,30 @@ function App() {
                       </div>
                     </div>
                     <div className="action-row">
-                      <button className="button outline" onClick={() => openModal("partDetail", part)}>詳細を開く</button>
+                      <button className="button outline" onClick={() => openModal("partDetail", part.id)}>詳細を開く</button>
                       <Menu
                         open={openMenuId === part.id}
                         onToggle={(event) => {
                           event.stopPropagation();
                           setOpenMenuId(openMenuId === part.id ? "" : part.id);
                         }}
+                        onClose={() => setOpenMenuId("")}
                         items={[
-                          { label: "アップロード", onClick: () => replacePartFile(part) },
-                          { label: "ダウンロード", onClick: () => addToast("ダウンロードを開始しました") },
-                          { label: "コードダウンロード", onClick: () => addToast("コードを出力しました") },
+                          { label: "アップロード", onClick: () => uploadPart(part) },
+                          {
+                            label: "ダウンロード",
+                            onClick: () => {
+                              addPartLog(part.id, `${CURRENT_USER} パーツをダウンロード`);
+                              addToast("ダウンロードを開始しました");
+                            },
+                          },
+                          {
+                            label: "コードダウンロード",
+                            onClick: () => {
+                              addPartLog(part.id, `${CURRENT_USER} コードをダウンロード`);
+                              addToast("コードを出力しました");
+                            },
+                          },
                           { label: "複製", onClick: () => duplicatePart(part) },
                           { label: "削除", onClick: () => deletePart(part) },
                         ]}
@@ -701,13 +840,27 @@ function App() {
       {modal.type && (
         <Modal onClose={closeModal}>
           {modal.type === "versions" && (
-            <VersionModal versions={versions} onApply={applyVersion} onClose={closeModal} />
+            <VersionModal
+              versions={versions}
+              onApply={applyVersion}
+              onEdit={() => addToast("編集モードは準備中です")}
+              onClose={closeModal}
+            />
           )}
-          {modal.type === "partDetail" && (
+          {modal.type === "addObject" && (
+            <AddObjectModal
+              onAdd={(payload) => {
+                addObject(payload);
+                closeModal();
+              }}
+              onClose={closeModal}
+            />
+          )}
+          {modal.type === "partDetail" && modalPart && (
             <PartDetailModal
-              part={modal.data}
-              onReplace={() => replacePartFile(modal.data)}
-              onToggle={() => togglePartDone(modal.data)}
+              part={modalPart}
+              onReplace={() => replacePartFile(modalPart)}
+              onToggle={() => togglePartDone(modalPart)}
               onClose={closeModal}
             />
           )}
@@ -750,9 +903,10 @@ function PageHeader({ title, subtitle, breadcrumbs, actions }) {
   );
 }
 
-function Viewport({ compact }) {
+function Viewport({ compact, image }) {
   return (
     <div className={`viewport ${compact ? "compact" : ""}`}>
+      {image && <img className="viewport-image" src={image} alt="" />}
       <div className="viewport-grid"></div>
       <div className="viewport-box"></div>
       <div className="viewport-axis">
@@ -762,25 +916,32 @@ function Viewport({ compact }) {
       </div>
       <div className="viewport-hud">
         <div className="hud-row">
-          <span>Perspective</span>
-          <span>mm</span>
+          <span>パース</span>
+          <span>単位:mm</span>
         </div>
         <div className="hud-row">
-          <span>1:120</span>
-          <span>CAD</span>
+          <span>縮尺 1:120</span>
+          <span>ビュー</span>
         </div>
       </div>
     </div>
   );
 }
 
-function Menu({ open, onToggle, items }) {
+function Menu({ open, onToggle, onClose, items }) {
   return (
     <div className="menu-wrap" onClick={(event) => event.stopPropagation()}>
       <button className="menu-button" onClick={onToggle}>⋯</button>
       <div className={`menu ${open ? "open" : ""}`}>
         {items.map((item) => (
-          <button key={item.label} className="menu-item" onClick={item.onClick}>
+          <button
+            key={item.label}
+            className="menu-item"
+            onClick={() => {
+              item.onClick();
+              if (onClose) onClose();
+            }}
+          >
             {item.label}
           </button>
         ))}
@@ -798,7 +959,7 @@ function Modal({ children, onClose }) {
   );
 }
 
-function VersionModal({ versions, onApply, onClose }) {
+function VersionModal({ versions, onApply, onEdit, onClose }) {
   return (
     <div>
       <div className="modal-header">
@@ -813,7 +974,7 @@ function VersionModal({ versions, onApply, onClose }) {
               <th>バージョン名</th>
               <th>パーツ</th>
               <th>ステータス</th>
-              <th>適応</th>
+              <th>適用</th>
             </tr>
           </thead>
           <tbody>
@@ -826,6 +987,7 @@ function VersionModal({ versions, onApply, onClose }) {
                 <td>
                   <input
                     type="radio"
+                    name="version"
                     checked={ver.applied}
                     onChange={() => onApply(ver.id)}
                   />
@@ -834,7 +996,7 @@ function VersionModal({ versions, onApply, onClose }) {
             ))}
           </tbody>
         </table>
-        <button className="button outline" onClick={() => onApply(versions[0].id)}>編集する</button>
+        <button className="button outline" onClick={onEdit}>編集する</button>
       </div>
     </div>
   );
@@ -846,15 +1008,17 @@ function PartDetailModal({ part, onReplace, onToggle, onClose }) {
     <div>
       <div className="modal-header">
         <div className="modal-title">パーツ詳細</div>
-        <button className="icon-button" onClick={onClose}>✕</button>
+        <div className="modal-actions">
+          <button className="button secondary" onClick={onToggle}>
+            {part.done ? "作成中に戻す" : "パーツ作成を完了する"}
+          </button>
+          <button className="icon-button" onClick={onClose}>✕</button>
+        </div>
       </div>
       <div className="modal-body modal-grid">
         <div className="card-stack">
           <div className="info-title">{part.name}</div>
           <div className="info-meta">{part.description}</div>
-          <button className="button secondary" onClick={onToggle}>
-            {part.done ? "作成中に戻す" : "パーツ作成完了"}
-          </button>
           <div className="banner">この分割データに利用されている数：4</div>
           <div className="log-box">
             {part.usageList.map((item) => (
@@ -869,9 +1033,9 @@ function PartDetailModal({ part, onReplace, onToggle, onClose }) {
           </div>
         </div>
         <div className="card-stack">
-          <Viewport />
+          <Viewport image={part.preview} />
           <div className="field">
-            <label>ファイル置換</label>
+            <label>ファイルの置換</label>
             <div className="log-box dropzone">ドラッグ&ドロップ</div>
             <button className="button outline" onClick={onReplace}>ファイル選択</button>
           </div>
@@ -879,7 +1043,7 @@ function PartDetailModal({ part, onReplace, onToggle, onClose }) {
             <thead>
               <tr>
                 <th>日付</th>
-                <th>username</th>
+                <th>ユーザー</th>
                 <th>ファイル名</th>
               </tr>
             </thead>
@@ -899,16 +1063,49 @@ function PartDetailModal({ part, onReplace, onToggle, onClose }) {
   );
 }
 
+function AddObjectModal({ onAdd, onClose }) {
+  const [projectName, setProjectName] = useState("新規プロジェクト");
+  const [name, setName] = useState("");
+
+  const handleSubmit = () => {
+    if (!name.trim()) return;
+    onAdd({ projectName, name: name.trim() });
+  };
+
+  return (
+    <div>
+      <div className="modal-header">
+        <div className="modal-title">オブジェクトの追加</div>
+        <button className="icon-button" onClick={onClose}>✕</button>
+      </div>
+      <div className="modal-body">
+        <div className="field">
+          <label>プロジェクト名</label>
+          <input value={projectName} onChange={(event) => setProjectName(event.target.value)} />
+        </div>
+        <div className="field">
+          <label>オブジェクト名</label>
+          <input value={name} onChange={(event) => setName(event.target.value)} />
+        </div>
+        <button className="button primary" onClick={handleSubmit}>追加する</button>
+      </div>
+    </div>
+  );
+}
+
 function AddPartModal({ library, onAdd, onClose }) {
   const [tab, setTab] = useState("existing");
-  const [form, setForm] = useState({ name: "", description: "", location: "" });
+  const [form, setForm] = useState({ name: "", description: "", location: "", preview: "" });
+  const [fileName, setFileName] = useState("未選択");
 
   const handleSelect = (item) => {
     setForm({
       name: item.name,
       description: item.description,
       location: item.location,
+      preview: item.preview,
     });
+    setFileName("既存パーツを参照");
   };
 
   const handleSubmit = () => {
@@ -931,12 +1128,13 @@ function AddPartModal({ library, onAdd, onClose }) {
             新しいパーツを追加する
           </button>
         </div>
+        <div className="note">ファイルの追加ではなく、作業場所の追加として登録します。</div>
         <div className="modal-grid">
           <div className="card-stack scroll-list">
             {library.map((item) => (
               <div key={item.id} className="card" onClick={() => handleSelect(item)}>
                 <div className="card-row compact">
-                  <Viewport compact />
+                  <Viewport compact image={item.preview} />
                   <div className="info-block">
                     <div className="info-title">{item.name}</div>
                     <div className="info-meta">{item.description}</div>
@@ -973,7 +1171,13 @@ function AddPartModal({ library, onAdd, onClose }) {
             </div>
             <div className="field">
               <label>ファイル添付</label>
-              <div className="log-box dropzone">アップロードは不要です</div>
+              <div className="log-box dropzone">{fileName}</div>
+              <button
+                className="button outline"
+                onClick={() => setFileName("サンプル_パーツ_v2.stl")}
+              >
+                サンプルを添付
+              </button>
             </div>
             <button className="button primary" onClick={handleSubmit}>決定</button>
           </div>
