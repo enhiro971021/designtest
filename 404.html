@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3DPKENTIKU | Redirecting</title>
+    <script>
+      const redirect = location.pathname.replace(/\/$/, "");
+      sessionStorage.setItem("spa-redirect", redirect + location.search + location.hash);
+      location.replace("/index.html");
+    </script>
+  </head>
+  <body></body>
+</html>
