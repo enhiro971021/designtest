@@ -329,10 +329,10 @@ body::after {
 
 .card {
   background: var(--panel);
-  border-radius: var(--radius-xl);
+  border-radius: 20px;
   box-shadow: var(--shadow-soft);
   border: 1px solid #efe8de;
-  padding: 18px 20px;
+  padding: 24px;
   display: grid;
   gap: 16px;
   animation: cardRise 0.5s ease both;
@@ -372,9 +372,18 @@ body::after {
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 12px 24px rgba(9, 19, 32, 0.2);
 }
 
+.split-card .viewport {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 16px 30px rgba(9, 19, 32, 0.28);
+}
+
 .viewport.compact {
   width: 120px;
   height: 120px;
+}
+
+.viewport.large {
+  width: 240px;
+  height: 240px;
 }
 
 .viewport-image {
@@ -545,6 +554,10 @@ body::after {
   line-height: 1.6;
 }
 
+.log-box.compact {
+  max-height: 78px;
+}
+
 .log-line {
   white-space: nowrap;
 }
@@ -645,6 +658,76 @@ body::after {
   gap: 10px;
 }
 
+.split-card {
+  display: grid;
+  grid-template-columns: 240px 1fr 56px;
+  gap: 24px;
+  align-items: start;
+}
+
+.split-card__preview {
+  width: 240px;
+  height: 240px;
+  display: grid;
+  place-items: center;
+}
+
+.split-card__content {
+  display: grid;
+  gap: 10px;
+}
+
+.split-card__date {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.split-card__coords {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+
+.split-card__desc {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.split-card__progress {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.split-card__status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.status-text {
+  color: var(--muted);
+}
+
+.split-card__actions {
+  width: 56px;
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.icon-button.action {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: #f4eee7;
+  font-size: 16px;
+}
+
 .menu-wrap {
   position: relative;
 }
@@ -652,8 +735,8 @@ body::after {
 .menu-button {
   border: 1px solid var(--line-strong);
   background: #f4eee7;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 14px;
   cursor: pointer;
   font-size: 20px;
@@ -982,6 +1065,15 @@ body::after {
   .version-panel {
     grid-template-columns: 1fr;
   }
+
+  .split-card {
+    grid-template-columns: 200px 1fr 56px;
+  }
+
+  .viewport.large {
+    width: 200px;
+    height: 200px;
+  }
 }
 
 @media (max-width: 960px) {
@@ -997,6 +1089,20 @@ body::after {
 
   .card-row {
     grid-template-columns: 1fr;
+  }
+
+  .split-card {
+    grid-template-columns: 1fr;
+  }
+
+  .split-card__preview,
+  .split-card__actions {
+    width: auto;
+  }
+
+  .split-card__actions {
+    grid-auto-flow: column;
+    justify-content: start;
   }
 
   .modal-grid {

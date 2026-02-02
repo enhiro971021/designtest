@@ -660,96 +660,107 @@ function App() {
               {objectSplits.map((split) => {
                 const progress = currentPartsProgress(split);
                 const progressPercent = progress.total ? Math.round((progress.done / progress.total) * 100) : 0;
+                const needsParts = split.status === "confirmed" && progress.done < progress.total;
                 return (
-                  <article key={split.id} className="card">
-                    <div className="card-row">
-                      <Viewport compact image={split.preview} />
-                      <div className="info-block">
-                        <div className="meta-row">
-                          <div>
-                            <div className="info-meta">分割データ確定日：{split.confirmedAt || "-"}</div>
-                            <div className="info-meta">最終編集日：{split.updatedAt}</div>
-                          </div>
-                          <div className={`status-pill ${split.status}`}>{
-                            split.status === "draft" ? "ドラフト" : split.status === "confirmed" ? "確定済み" : "座標重なり"
-                          }</div>
+                  <article key={split.id} className="card split-card">
+                    <div className="split-card__preview">
+                      <Viewport className="large" image={split.preview} />
+                    </div>
+                    <div className="split-card__content">
+                      <div className="split-card__date">最終編集日：{split.updatedAt}</div>
+                      <div className="split-card__coords">
+                        (x1={split.coords.x1}, x2={split.coords.x2}, y1={split.coords.y1}, y2={split.coords.y2}, z1={split.coords.z1}, z2={split.coords.z2})
+                      </div>
+                      <div className="split-card__desc">{split.description}</div>
+                      <div className="split-card__progress">
+                        <span>パーツ：{progress.done}/{progress.total || "未設定"}</span>
+                        <div className="progress-bar thin">
+                          <span style={{ width: `${progressPercent}%` }} />
                         </div>
-                        <div className="info-title">{split.description}</div>
-                        <div className="coords-row">
-                          <div className="coords">
-                            (x1={split.coords.x1}, x2={split.coords.x2}, y1={split.coords.y1}, y2={split.coords.y2}, z1={split.coords.z1}, z2={split.coords.z2})
-                          </div>
-                          <button className="icon-button small disabled" title="モックでは編集できません" disabled>✎</button>
-                        </div>
-                        {split.status === "confirmed" ? (
-                          <div className="progress-line">
-                            <span>パーツ：{progress.done}/{progress.total}</span>
-                            <div className="progress-bar thin"><span style={{ width: `${progressPercent}%` }} /></div>
-                            {editTotalId === split.id ? (
-                              <div className="inline-edit-wrap">
-                                <input
-                                  className="inline-input"
-                                  value={editTotalValue}
-                                  type="number"
-                                  min="0"
-                                  onChange={(event) => setEditTotalValue(event.target.value)}
-                                />
-                                <button className="mini-button" onClick={() => handleEditTotalSave(split)}>更新</button>
-                                <button className="mini-button ghost" onClick={() => setEditTotalId("")}>取消</button>
-                              </div>
-                            ) : (
-                              <button className="mini-button ghost" onClick={() => handleEditTotalStart(split)}>総数を編集</button>
-                            )}
-                          </div>
-                        ) : (
-                          <div className="progress-line">
-                            <span>パーツ：0/未設定</span>
-                          </div>
+                        {split.status === "confirmed" && (
+                          editTotalId === split.id ? (
+                            <div className="inline-edit-wrap">
+                              <input
+                                className="inline-input"
+                                value={editTotalValue}
+                                type="number"
+                                min="0"
+                                onChange={(event) => setEditTotalValue(event.target.value)}
+                              />
+                              <button className="mini-button" onClick={() => handleEditTotalSave(split)}>更新</button>
+                              <button className="mini-button ghost" onClick={() => setEditTotalId("")}>取消</button>
+                            </div>
+                          ) : (
+                            <button className="mini-button ghost" onClick={() => handleEditTotalStart(split)}>総数を編集</button>
+                          )
                         )}
-                        <div className={`banner ${split.status === "conflict" ? "danger" : split.status === "confirmed" ? "" : "warning"}`}>
+                      </div>
+                      <div className="split-card__status">
+                        <div className={`status-pill ${split.status}`}>
+                          {split.status === "draft" ? "ドラフト" : split.status === "confirmed" ? "確定済み" : "座標重なり"}
+                        </div>
+                        <div className="status-text">
                           {split.status === "draft" && "分割データを確定してください"}
                           {split.status === "confirmed" && "パーツを登録してください"}
                           {split.status === "conflict" && "他の分割データと座標が重なっています"}
                         </div>
-                        <div className="log-box">
-                          {split.logs.slice(0, 4).map((log) => (
-                            <div key={log} className="log-line">{log}</div>
-                          ))}
-                        </div>
                       </div>
-                      <div className="action-row">
-                        {split.status === "confirmed" ? (
-                          <button className="button secondary" onClick={() => revertSplit(split)}>編集に戻す</button>
-                        ) : (
-                          <button className="button secondary" onClick={() => confirmSplit(split)}>分割データを確定</button>
-                        )}
-                        <Menu
-                          open={openMenuId === split.id}
-                          onToggle={(event) => {
-                            event.stopPropagation();
-                            setOpenMenuId(openMenuId === split.id ? "" : split.id);
-                          }}
-                          onClose={() => setOpenMenuId("")}
-                          items={[
-                            { label: "詳細を開く", onClick: () => openPartsPage(split) },
-                            {
-                              label: "データ置換",
-                              onClick: () => {
-                                addSplitLog(split.id, `${CURRENT_USER} 分割データを置換`);
-                                addToast("データを置換しました");
-                              },
-                            },
-                            {
-                              label: "ダウンロード",
-                              onClick: () => {
-                                addSplitLog(split.id, `${CURRENT_USER} 分割データをダウンロード`);
-                                addToast("ダウンロードを開始しました");
-                              },
-                            },
-                            { label: "アーカイブ", onClick: () => archiveSplit(split.id) },
-                          ]}
-                        />
+                      <div className="log-box compact">
+                        {split.logs.slice(0, 3).map((log) => (
+                          <div key={log} className="log-line">{log}</div>
+                        ))}
                       </div>
+                    </div>
+                    <div className="split-card__actions">
+                      <button
+                        className="icon-button action"
+                        title={needsParts ? "パーツ作成リストへ" : "詳細を開く"}
+                        onClick={() => openPartsPage(split)}
+                      >
+                        ⌁
+                      </button>
+                      {split.status === "confirmed" ? (
+                        <button
+                          className="icon-button action"
+                          title={needsParts ? "パーツ作成リストへ" : "編集に戻す"}
+                          onClick={() => (needsParts ? openPartsPage(split) : revertSplit(split))}
+                        >
+                          {needsParts ? "→" : "↺"}
+                        </button>
+                      ) : (
+                        <button
+                          className="icon-button action"
+                          title="分割データを確定"
+                          onClick={() => confirmSplit(split)}
+                        >
+                          ✓
+                        </button>
+                      )}
+                      <Menu
+                        open={openMenuId === split.id}
+                        onToggle={(event) => {
+                          event.stopPropagation();
+                          setOpenMenuId(openMenuId === split.id ? "" : split.id);
+                        }}
+                        onClose={() => setOpenMenuId("")}
+                        items={[
+                          {
+                            label: "データ置換",
+                            onClick: () => {
+                              addSplitLog(split.id, `${CURRENT_USER} 分割データを置換`);
+                              addToast("データを置換しました");
+                            },
+                          },
+                          {
+                            label: "ダウンロード",
+                            onClick: () => {
+                              addSplitLog(split.id, `${CURRENT_USER} 分割データをダウンロード`);
+                              addToast("ダウンロードを開始しました");
+                            },
+                          },
+                          { label: "アーカイブ", onClick: () => archiveSplit(split.id) },
+                        ]}
+                      />
                     </div>
                   </article>
                 );
@@ -917,10 +928,10 @@ function PageHeader({ title, subtitle, breadcrumbs, actions }) {
   );
 }
 
-function Viewport({ compact, image }) {
+function Viewport({ compact, image, className = "" }) {
   const resolvedImage = image ? resolveAsset(image) : "";
   return (
-    <div className={`viewport ${compact ? "compact" : ""}`}>
+    <div className={`viewport ${compact ? "compact" : ""} ${className}`.trim()}>
       {resolvedImage && <img className="viewport-image" src={resolvedImage} alt="" loading="lazy" />}
       <div className="viewport-grid"></div>
       <div className="viewport-box"></div>
