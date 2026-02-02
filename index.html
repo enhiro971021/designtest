@@ -3,56 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <script>
-      const redirect = sessionStorage.getItem("spa-redirect");
-      if (redirect) {
-        sessionStorage.removeItem("spa-redirect");
-        history.replaceState({}, "", redirect);
-      }
-    </script>
     <title>3DPKENTIKU | 型枠作成リスト</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <aside class="sidebar">
-        <div class="sidebar__brand">
-          <div class="logo-mark"></div>
-          <div class="logo-text">3DPKENTIKU</div>
-        </div>
-        <nav class="sidebar__nav">
-          <div class="nav-section">
-            <div class="nav-item disabled">プロジェクト情報</div>
-            <div class="nav-item disabled">連絡</div>
-            <div class="nav-item disabled">スケジュール</div>
-          </div>
-          <div class="nav-divider"></div>
-          <div class="nav-section">
-            <div class="nav-item active">型枠作成リスト</div>
-            <div class="nav-item disabled">パーツ一覧</div>
-            <div class="nav-item disabled">3Dビュー作成リスト</div>
-            <div class="nav-item disabled">印刷割り当て</div>
-            <div class="nav-item disabled">印刷状況</div>
-            <div class="nav-item disabled">発送割り当て</div>
-          </div>
-        </nav>
-        <div class="sidebar__footer">
-          <div class="nav-item disabled">アカウント</div>
-          <div class="nav-item disabled">設定</div>
-          <div class="nav-item disabled">ログアウト</div>
-        </div>
-      </aside>
-      <main class="main">
-        <header class="page-header" id="page-header"></header>
-        <section class="page-content" id="page-content"></section>
-      </main>
-    </div>
+    <div id="root"></div>
 
-    <div class="modal-backdrop" id="modal-backdrop"></div>
-    <div id="modal-root"></div>
-    <div class="toast-container" id="toast-container"></div>
-
-    <script src="app.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel" src="app.js"></script>
   </body>
 </html>
